@@ -73,7 +73,6 @@ func TestWallet(t *testing.T) {
 			t.Errorf("expected error got nil")
 		}
 	})
-
 }
 
 func getEmptyWallet(id, amonut int) Wallet {
