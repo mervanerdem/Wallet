@@ -15,6 +15,7 @@ func TestWallet(t *testing.T) {
 			t.Errorf("expected %d, got %d", wanted, got)
 		}
 	})
+	//Wallet Credit Test
 	t.Run("Wallet credit test", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, 15)
 
@@ -28,6 +29,18 @@ func TestWallet(t *testing.T) {
 		}
 
 	})
+	//Negative Credit Test
+	t.Run("Wallet negative credit test", func(t *testing.T) {
+		dummy_wallet := getEmptyWallet(1, 15)
+
+		got := dummy_wallet.Credit(-5)
+
+		if got == nil {
+			t.Errorf("expected error got nil")
+		}
+
+	})
+
 }
 
 func getEmptyWallet(id, amonut int) Wallet {
