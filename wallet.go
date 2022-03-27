@@ -7,11 +7,16 @@ type Wallet struct {
 	balance int
 }
 
+type WStorage interface {
+	Update(wallet Wallet) error
+	Get(id int) (*Wallet, error)
+}
+
 func (w *Wallet) Balance() int {
 	return w.balance
 }
 
-func (w *Wallet) Credit(amount int) error {
+func (w *Wallet) Debit(amount int) error {
 	if amount < 0 {
 		return fmt.Errorf("Credit amount can not be negative!")
 	}
@@ -19,7 +24,7 @@ func (w *Wallet) Credit(amount int) error {
 	return nil
 }
 
-func (w *Wallet) Debit(amount int) error {
+func (w *Wallet) Credit(amount int) error {
 	if amount > w.balance {
 		return fmt.Errorf("Debit amount can not be higher than balance!")
 	} else if amount < 0 {
