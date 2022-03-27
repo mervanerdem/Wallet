@@ -20,6 +20,10 @@ func (w *Wallet) Credit(amount int) error {
 }
 
 func (w *Wallet) Debit(amount int) error {
+	if amount > w.balance {
+		return fmt.Errorf("Debit amount can not be higher than balance!")
+	}
+
 	w.balance -= amount
 	return nil
 }

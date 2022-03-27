@@ -41,7 +41,7 @@ func TestWallet(t *testing.T) {
 
 	})
 	//Wallet Debit Test
-	t.Run("Wallet negative credit test", func(t *testing.T) {
+	t.Run("Wallet debit test", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, 15)
 
 		dummy_wallet.Debit(5)
@@ -51,6 +51,26 @@ func TestWallet(t *testing.T) {
 
 		if got != wanted {
 			t.Errorf("expected %d, got %d", wanted, got)
+		}
+	})
+	//Wallet debit can not higher than balance Test
+	t.Run("Debit can not higher than balance", func(t *testing.T) {
+		dummy_wallet := getEmptyWallet(1, 5)
+
+		got := dummy_wallet.Debit(10)
+
+		if got == nil {
+			t.Errorf("expected error got nil")
+		}
+	})
+	//Wallet debit can not be negative Test
+	t.Run("Debit can not higher than balance", func(t *testing.T) {
+		dummy_wallet := getEmptyWallet(1, 5)
+
+		got := dummy_wallet.Debit(-5)
+
+		if got == nil {
+			t.Errorf("expected error got nil")
 		}
 	})
 
