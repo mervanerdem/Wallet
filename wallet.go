@@ -20,5 +20,6 @@ func (w *Wallet) Credit(amount int) error {
 }
 
 func (w *Wallet) Debit(amount int) error {
+	w.balance -= amount
 	return nil
 }
