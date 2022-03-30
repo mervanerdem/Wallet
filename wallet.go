@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/shopspring/decimal"
+)
 
 type Wallet struct {
-	id      int
-	balance int
+	ID             int
+	Wallet_balance decimal.Decimal
 }
 
 type WStorage interface {
@@ -12,26 +16,27 @@ type WStorage interface {
 	Get(id int) (*Wallet, error)
 }
 
-func (w *Wallet) Balance() int {
-	return w.balance
+func (w *Wallet) Balance() float64 {
+	return w.Wallet_balance.InexactFloat64()
 }
 
-func (w *Wallet) Debit(amount int) error {
-	if amount < 0 {
-		return fmt.Errorf("Credit amount can not be negative!")
+func (w *Wallet) Debit(amount decimal.Decimal) error {
+	if amount.IsZero() {
+		return fmt.Errorf("Debit amount can not be negative!")
 	}
-	w.balance += amount
+	w.Wallet_balance = decimal.Sum(w.Wallet_balance, amount)
 	return nil
 }
 
-func (w *Wallet) Credit(amount int) error {
-	if amount > w.balance {
-		return fmt.Errorf("Debit amount can not be higher than balance!")
-	}
-	if amount < 0 {
-		return fmt.Errorf("Debit amount can not be negative!")
+func (w *Wallet) Credit(amount decimal.Decimal) error {
+
+	if amount.GreaterThan(w.Wallet_balance) == true {
+		return fmt.Errorf("Credit amount can not be higher than balance!")
+	} else if amount.IsNegative() == true {
+		return fmt.Errorf("Credit amount can not be negative!")
 	}
 
-	w.balance -= amount
+	a := w.Wallet_balance.Sub(amount)
+	w.Wallet_balance = a
 	return nil
 }

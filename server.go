@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 )
 
 func NewServer(storage WStorage) http.Handler {
@@ -22,9 +23,9 @@ func NewServer(storage WStorage) http.Handler {
 		if err != nil {
 			notFound(err, ctx)
 		} else {
-			ctx.JSON(http.StatusOK, map[string]int{
-				"Balance":   wallet.Balance(),
-				"Wallet_ID": wallet.id,
+			ctx.JSON(http.StatusOK, map[string]any{
+				"Balance":   wallet.Wallet_balance,
+				"Wallet_ID": wallet.ID,
 			})
 		}
 	})
@@ -37,7 +38,7 @@ func NewServer(storage WStorage) http.Handler {
 			notFound(err, ctx)
 		}
 		var data = struct {
-			Amount int
+			Amount decimal.Decimal
 		}{}
 		ctx.BindJSON(&data)
 
@@ -47,10 +48,10 @@ func NewServer(storage WStorage) http.Handler {
 		}
 		wallet.Debit(data.Amount)
 
-		ctx.JSON(201, map[string]int{
-			"Balance":   wallet.Balance(),
+		ctx.JSON(201, map[string]any{
+			"Balance":   wallet.Wallet_balance,
 			"Debit":     data.Amount,
-			"Wallet_ID": wallet.id,
+			"Wallet_ID": wallet.ID,
 		})
 	})
 	//Send Credit
@@ -61,7 +62,7 @@ func NewServer(storage WStorage) http.Handler {
 			notFound(err, ctx)
 		}
 		var data = struct {
-			Amount int
+			Amount decimal.Decimal
 		}{}
 		ctx.BindJSON(&data)
 
@@ -71,10 +72,10 @@ func NewServer(storage WStorage) http.Handler {
 		}
 		wallet.Debit(data.Amount)
 
-		ctx.JSON(201, map[string]int{
-			"Balance":   wallet.Balance(),
+		ctx.JSON(201, map[string]any{
+			"Balance":   wallet.Wallet_balance,
 			"Credit":    data.Amount,
-			"Wallet_ID": wallet.id,
+			"Wallet_ID": wallet.ID,
 		})
 	})
 
