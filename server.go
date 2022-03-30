@@ -1,11 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
+	"github.com/sirupsen/logrus"
 )
 
 func NewServer(storage WStorage) http.Handler {
@@ -86,4 +90,46 @@ func notFound(err error, ctx *gin.Context) {
 	ctx.JSON(http.StatusNotFound, map[string]string{
 		"error": err.Error(),
 	})
+}
+
+func getLogger(file string) *logrus.Logger {
+	logger := logrus.New()
+
+	f, err := os.Create(file)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	logger.SetOutput(f)
+	logger.SetFormatter(&logrus.TextFormatter{
+		DisableColors:   true,
+		FullTimestamp:   true,
+		TimestampFormat: time.RFC1123Z,
+	})
+
+	return logger
+}
+
+func getInfoLogger(logger *logrus.Logger) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		// Start timer
+		start := time.Now()
+
+		// Process Request
+		ctx.Next()
+
+		// Stop timer
+		duration := time.Since(start)
+
+		logger.WithFields(map[string]any{
+			"client_ip":  ctx.ClientIP(),
+			"duration":   duration,
+			"method":     ctx.Request.Method,
+			"path":       ctx.Request.RequestURI,
+			"status":     ctx.Writer.Status(),
+			"referrer":   ctx.Request.Referer(),
+			"request_id": ctx.Writer.Header().Get("Request-Id"),
+		}).Info()
+	}
 }
