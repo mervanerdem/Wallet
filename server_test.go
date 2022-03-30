@@ -7,6 +7,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/shopspring/decimal"
 )
 
 type TStorage struct {
@@ -23,13 +25,13 @@ func (t *TStorage) Get(id int) (*Wallet, error) {
 }
 
 func TestServer(t *testing.T) {
-	server := NewServer(&TStorage{
+	server := NewServer(&TStorage{ // get out it
 		dataholder: map[int]Wallet{
-			1: {id: 1, balance: 10},
-			2: {id: 2, balance: 20},
-			3: {id: 3, balance: 30},
-			4: {id: 4, balance: 40},
-			5: {id: 5, balance: 50},
+			1: {ID: 1, Wallet_balance: decimal.NewFromFloat(10)},
+			2: {ID: 2, Wallet_balance: decimal.NewFromFloat(20)},
+			3: {ID: 3, Wallet_balance: decimal.NewFromFloat(30)},
+			4: {ID: 4, Wallet_balance: decimal.NewFromFloat(40)},
+			5: {ID: 5, Wallet_balance: decimal.NewFromFloat(50)},
 		},
 	})
 	// Get Balance
@@ -39,10 +41,10 @@ func TestServer(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		got := struct{ Balance int }{}
+		got := struct{ Balance decimal.Decimal }{}
 		json.NewDecoder(response.Body).Decode(&got)
 
-		want := 10
+		want := decimal.NewFromFloat(10)
 
 		if got.Balance != want {
 			t.Errorf("got %d , want %d", got, want)
@@ -66,7 +68,7 @@ func TestServer(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		if response.Result().StatusCode != http.StatusOK {
+		if response.Result().StatusCode != http.StatusCreated {
 			t.Errorf("expected code 200, got %d", response.Result().StatusCode)
 		}
 	})
@@ -77,7 +79,7 @@ func TestServer(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		if response.Result().StatusCode != http.StatusOK {
+		if response.Result().StatusCode != http.StatusCreated {
 			t.Errorf("expected code 200, got %d", response.Result().StatusCode)
 		}
 	})
@@ -89,7 +91,7 @@ func TestServer(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		if response.Result().StatusCode != http.StatusOK {
+		if response.Result().StatusCode != http.StatusCreated {
 			t.Errorf("expected code 200, got %d", response.Result().StatusCode)
 		}
 	})
@@ -101,7 +103,7 @@ func TestServer(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		if response.Result().StatusCode != http.StatusOK {
+		if response.Result().StatusCode != http.StatusCreated {
 			t.Errorf("expected code 200, got %d", response.Result().StatusCode)
 		}
 	})
