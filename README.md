@@ -9,7 +9,7 @@ Wallets of the players of an online casino, getting and updating players account
 ```go
 git clone github.com/mervanerdem/Wallet
 ```
-And if you don't have used library install them.(It's not about using library but you can see in that [link](https://pkg.go.dev/cmd/go/internal/get))
+After cloning if you don't have used library, install them.(It's not about using library but you can see in that [link](https://pkg.go.dev/cmd/go/internal/get))
 
 ### Build or Run it
 For building
@@ -78,7 +78,19 @@ The responce is like:
 }
 ```
 
+## Library
+Used Library
 
+[HTTP](https://github.com/gin-gonic/gin) : Gin is a web framework written in Go (Golang)
+
+[MySQL](https://github.com/go-gorm/gorm) : The fantastic ORM library for Golang, aims to be developer friendly.
+
+[Decimal](https://github.com/shopspring/decimal) :Arbitrary-precision fixed-point decimal numbers in go.
+
+
+## Licanse
+
+Apache-2.0 License
 
 
 
