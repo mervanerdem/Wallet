@@ -46,7 +46,7 @@ func TestServer(t *testing.T) {
 
 		want := decimal.NewFromFloat(10)
 
-		if got.Balance != want {
+		if got.Balance.Equal(want) == false {
 			t.Errorf("got %d , want %d", got, want)
 		}
 	})

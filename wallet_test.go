@@ -13,9 +13,9 @@ func TestWallet(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15))
 
 		got := dummy_wallet.Balance()
-		wanted := 15.0
+		wanted := decimal.NewFromFloat(15.0)
 
-		if got != wanted {
+		if got.Equal(wanted) == false {
 			t.Errorf("expected %v got %v", wanted, got)
 		}
 	})
@@ -26,9 +26,9 @@ func TestWallet(t *testing.T) {
 		dummy_wallet.Credit(decimal.NewFromFloat(5.0))
 
 		got := dummy_wallet.Balance()
-		wanted := 10.0
+		wanted := decimal.NewFromFloat(10.0)
 
-		if got != wanted {
+		if got.Equal(wanted) == false {
 			t.Errorf("expected %v, got %v", wanted, got)
 		}
 
@@ -51,9 +51,9 @@ func TestWallet(t *testing.T) {
 		dummy_wallet.Debit(decimal.NewFromFloat(5))
 
 		got := dummy_wallet.Balance()
-		wanted := 20.0
+		wanted := decimal.NewFromFloat(20.0)
 
-		if got != wanted {
+		if got.Equal(wanted) == false {
 			t.Errorf("expected %v, got %v", wanted, got)
 		}
 	})
