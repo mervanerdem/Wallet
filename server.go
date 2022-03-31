@@ -20,12 +20,16 @@ func NewServer(storage WStorage) http.Handler {
 		id_str := ctx.Param("id")
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
-			notFound(err, ctx)
+			ctx.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Unsuitable ID number",
+			})
 		}
 
 		wallet, err := storage.Get(id)
 		if err != nil {
-			notFound(err, ctx)
+			ctx.JSON(http.StatusNotFound, map[string]string{
+				"error": err.Error(),
+			})
 		} else {
 			ctx.JSON(http.StatusOK, map[string]any{
 				"Balance":   wallet.Wallet_balance,
@@ -39,7 +43,9 @@ func NewServer(storage WStorage) http.Handler {
 		id_str := ctx.Param("id")
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
-			notFound(err, ctx)
+			ctx.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Unsuitable ID number",
+			})
 		}
 		var data = struct {
 			Amount decimal.Decimal
@@ -48,22 +54,36 @@ func NewServer(storage WStorage) http.Handler {
 
 		wallet, err := storage.Get(id)
 		if err != nil {
-			notFound(err, ctx)
+			ctx.JSON(http.StatusNotFound, map[string]string{
+				"error": err.Error(),
+			})
 		}
-		wallet.Debit(data.Amount)
+		err = wallet.Debit(data.Amount)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, map[string]any{
+				"Debit": "Amount can not be negative",
+			})
+		} else {
+			ctx.JSON(201, map[string]any{
+				"Balance":   wallet.Wallet_balance,
+				"Debit":     data.Amount,
+				"Wallet_ID": wallet.ID,
+			})
+			storage.Update(Wallet{
+				ID:             wallet.ID,
+				Wallet_balance: wallet.Wallet_balance,
+			})
+		}
 
-		ctx.JSON(201, map[string]any{
-			"Balance":   wallet.Wallet_balance,
-			"Debit":     data.Amount,
-			"Wallet_ID": wallet.ID,
-		})
 	})
 	//Send Credit
 	router.POST("/api/v1/wallets/:id/credit", func(ctx *gin.Context) {
 		id_str := ctx.Param("id")
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
-			notFound(err, ctx)
+			ctx.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Unsuitable ID number",
+			})
 			return
 		}
 		var data = struct {
@@ -73,25 +93,32 @@ func NewServer(storage WStorage) http.Handler {
 
 		wallet, err := storage.Get(id)
 		if err != nil {
-			notFound(err, ctx)
+			ctx.JSON(http.StatusNotFound, map[string]string{
+				"error": err.Error(),
+			})
 			return
 		}
-		wallet.Debit(data.Amount)
 
-		ctx.JSON(201, map[string]any{
-			"Balance":   wallet.Wallet_balance,
-			"Credit":    data.Amount,
-			"Wallet_ID": wallet.ID,
-		})
+		err = wallet.Credit(data.Amount)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, map[string]any{
+				"Credit": "Amount Unsuitable",
+			})
+		} else {
+			ctx.JSON(201, map[string]any{
+				"Balance":   wallet.Wallet_balance,
+				"Debit":     data.Amount,
+				"Wallet_ID": wallet.ID,
+			})
+			storage.Update(Wallet{
+				ID:             wallet.ID,
+				Wallet_balance: wallet.Wallet_balance,
+			})
+		}
 	})
 
 	return router
-}
-
-func notFound(err error, ctx *gin.Context) {
-	ctx.JSON(http.StatusNotFound, map[string]string{
-		"error": err.Error(),
-	})
 }
 
 func getLogger(file string) *logrus.Logger {
