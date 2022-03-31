@@ -36,8 +36,7 @@ func (w *Wallet) Credit(amount decimal.Decimal) error {
 	} else if amount.IsNegative() == true {
 		return fmt.Errorf("Credit amount can not be negative!")
 	}
-
-	a := w.Wallet_balance.Sub(amount)
-	w.Wallet_balance = a
+	amount = amount.Neg()
+	w.Wallet_balance = decimal.Sum(w.Wallet_balance, amount)
 	return nil
 }

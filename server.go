@@ -57,6 +57,10 @@ func NewServer(storage WStorage) http.Handler {
 			"Debit":     data.Amount,
 			"Wallet_ID": wallet.ID,
 		})
+		storage.Update(Wallet{
+			ID:             wallet.ID,
+			Wallet_balance: wallet.Wallet_balance,
+		})
 	})
 	//Send Credit
 	router.POST("/api/v1/wallets/:id/credit", func(ctx *gin.Context) {
@@ -76,12 +80,16 @@ func NewServer(storage WStorage) http.Handler {
 			notFound(err, ctx)
 			return
 		}
-		wallet.Debit(data.Amount)
+		wallet.Credit(data.Amount)
 
 		ctx.JSON(201, map[string]any{
 			"Balance":   wallet.Wallet_balance,
 			"Credit":    data.Amount,
 			"Wallet_ID": wallet.ID,
+		})
+		storage.Update(Wallet{
+			ID:             wallet.ID,
+			Wallet_balance: wallet.Wallet_balance,
 		})
 	})
 
