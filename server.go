@@ -14,7 +14,7 @@ import (
 
 func NewServer(storage WStorage) http.Handler {
 	router := gin.New()
-
+	router.Use(getInfoLogger(getLogger("./log.log")))
 	//Get balance
 	router.GET("/api/v1/wallets/:id/balance", func(ctx *gin.Context) {
 		id_str := ctx.Param("id")
@@ -64,15 +64,17 @@ func NewServer(storage WStorage) http.Handler {
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
 			notFound(err, ctx)
+			return
 		}
 		var data = struct {
-			Amount decimal.Decimal
+			Amount decimal.Decimal //body
 		}{}
 		ctx.BindJSON(&data)
 
 		wallet, err := storage.Get(id)
 		if err != nil {
 			notFound(err, ctx)
+			return
 		}
 		wallet.Debit(data.Amount)
 
