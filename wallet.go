@@ -16,12 +16,13 @@ type WStorage interface {
 	Get(id int) (*Wallet, error)
 }
 
-func (w *Wallet) Balance() float64 {
-	return w.Wallet_balance.InexactFloat64()
+func (w *Wallet) Balance() decimal.Decimal {
+	w.Wallet_balance = decimal.NewFromFloat(w.Wallet_balance.InexactFloat64())
+	return w.Wallet_balance
 }
 
 func (w *Wallet) Debit(amount decimal.Decimal) error {
-	if amount.IsZero() {
+	if amount.IsNegative() {
 		return fmt.Errorf("Debit amount can not be negative!")
 	}
 	w.Wallet_balance = decimal.Sum(w.Wallet_balance, amount)

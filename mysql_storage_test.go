@@ -31,8 +31,8 @@ func TestMYSQLStorage(t *testing.T) {
 
 	storage.Update(Wallet{ID: 42, Wallet_balance: decimal.NewFromInt(800)})
 	if wallet, err := storage.Get(42); err == nil {
-		if wallet.Balance() != 800 {
-			t.Errorf("expected balance 800, got %f", wallet.Balance())
+		if wallet.Balance().Equal(decimal.NewFromFloat(800)) == false {
+			t.Errorf("expected balance 800, got %v", wallet.Balance())
 		}
 	} else {
 		t.Error("expected wallet, got nil, error: " + err.Error())
