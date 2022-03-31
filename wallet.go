@@ -22,7 +22,7 @@ func (w *Wallet) Balance() decimal.Decimal {
 }
 
 func (w *Wallet) Debit(amount decimal.Decimal) error {
-	if amount.IsNegative() {
+	if amount.IsNegative() == true {
 		return fmt.Errorf("Debit amount can not be negative!")
 	}
 	w.Wallet_balance = decimal.Sum(w.Wallet_balance, amount)
