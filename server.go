@@ -20,8 +20,8 @@ func NewServer(storage WStorage) http.Handler {
 		id_str := ctx.Param("id")
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, map[string]string{
-				"error": err.Error(),
+			ctx.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Unsuitable ID number",
 			})
 		}
 
@@ -43,8 +43,8 @@ func NewServer(storage WStorage) http.Handler {
 		id_str := ctx.Param("id")
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, map[string]string{
-				"error": err.Error(),
+			ctx.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Unsuitable ID number",
 			})
 		}
 		var data = struct {
@@ -81,8 +81,8 @@ func NewServer(storage WStorage) http.Handler {
 		id_str := ctx.Param("id")
 		id, err := strconv.Atoi(id_str)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, map[string]string{
-				"error": err.Error(),
+			ctx.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Unsuitable ID number",
 			})
 			return
 		}
@@ -103,7 +103,7 @@ func NewServer(storage WStorage) http.Handler {
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, map[string]any{
-				"Credit": "Amount unsuitable",
+				"Credit": "Amount Unsuitable",
 			})
 		} else {
 			ctx.JSON(201, map[string]any{
