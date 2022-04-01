@@ -23,6 +23,7 @@ func NewServer(storage WStorage) http.Handler {
 			ctx.JSON(http.StatusBadRequest, map[string]string{
 				"error": "Unsuitable ID number",
 			})
+			return
 		}
 
 		wallet, err := storage.Get(id)
@@ -30,12 +31,13 @@ func NewServer(storage WStorage) http.Handler {
 			ctx.JSON(http.StatusNotFound, map[string]string{
 				"error": err.Error(),
 			})
-		} else {
-			ctx.JSON(http.StatusOK, map[string]any{
-				"Balance":   wallet.Wallet_balance,
-				"Wallet_ID": wallet.ID,
-			})
+			return
 		}
+		ctx.JSON(http.StatusOK, map[string]any{
+			"Balance":   wallet.Wallet_balance,
+			"Wallet_ID": wallet.ID,
+		})
+
 	})
 
 	//Send debit
@@ -46,6 +48,7 @@ func NewServer(storage WStorage) http.Handler {
 			ctx.JSON(http.StatusBadRequest, map[string]string{
 				"error": "Unsuitable ID number",
 			})
+			return
 		}
 		var data = struct {
 			Amount decimal.Decimal
@@ -57,24 +60,24 @@ func NewServer(storage WStorage) http.Handler {
 			ctx.JSON(http.StatusNotFound, map[string]string{
 				"error": err.Error(),
 			})
+			return
 		}
 		err = wallet.Debit(data.Amount)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, map[string]any{
 				"Debit": "Amount can not be negative",
 			})
-		} else {
-			ctx.JSON(201, map[string]any{
-				"Balance":   wallet.Wallet_balance,
-				"Debit":     data.Amount,
-				"Wallet_ID": wallet.ID,
-			})
-			storage.Update(Wallet{
-				ID:             wallet.ID,
-				Wallet_balance: wallet.Wallet_balance,
-			})
+			return
 		}
-
+		ctx.JSON(201, map[string]any{
+			"Balance":   wallet.Wallet_balance,
+			"Debit":     data.Amount,
+			"Wallet_ID": wallet.ID,
+		})
+		storage.Update(Wallet{
+			ID:             wallet.ID,
+			Wallet_balance: wallet.Wallet_balance,
+		})
 	})
 	//Send Credit
 	router.POST("/api/v1/wallets/:id/credit", func(ctx *gin.Context) {
@@ -105,17 +108,18 @@ func NewServer(storage WStorage) http.Handler {
 			ctx.JSON(http.StatusBadRequest, map[string]any{
 				"Credit": "Amount Unsuitable",
 			})
-		} else {
-			ctx.JSON(201, map[string]any{
-				"Balance":   wallet.Wallet_balance,
-				"Debit":     data.Amount,
-				"Wallet_ID": wallet.ID,
-			})
-			storage.Update(Wallet{
-				ID:             wallet.ID,
-				Wallet_balance: wallet.Wallet_balance,
-			})
+			return
 		}
+		ctx.JSON(201, map[string]any{
+			"Balance":   wallet.Wallet_balance,
+			"Debit":     data.Amount,
+			"Wallet_ID": wallet.ID,
+		})
+		storage.Update(Wallet{
+			ID:             wallet.ID,
+			Wallet_balance: wallet.Wallet_balance,
+		})
+
 	})
 
 	return router
