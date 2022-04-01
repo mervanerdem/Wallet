@@ -25,7 +25,7 @@ func TestMYSQLStorage(t *testing.T) {
 		t.Error("expected wallet, got nil")
 	}
 
-	if _, err := storage.Get(2); err == nil {
+	if _, err := storage.Get(200); err == nil {
 		t.Error("expected error")
 	}
 

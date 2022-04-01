@@ -79,8 +79,8 @@ func TestServer(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		if response.Result().StatusCode != http.StatusCreated {
-			t.Errorf("expected code 200, got %d", response.Result().StatusCode)
+		if response.Result().StatusCode != http.StatusBadRequest {
+			t.Errorf("expected code 400, got %v", response.Result().StatusCode)
 		}
 	})
 
