@@ -7,17 +7,21 @@ import (
 )
 
 func TestWallet(t *testing.T) {
+	assertCorrectMessage := func(t testing.TB, got, want decimal.Decimal) {
+		t.Helper()
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	}
 
 	//Wallet Balance Test
 	t.Run("Wallet balance test", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15))
 
 		got := dummy_wallet.Balance()
-		wanted := decimal.NewFromFloat(15.0)
+		want := decimal.NewFromFloat(15.0)
 
-		if got.Equal(wanted) == false {
-			t.Errorf("expected %v got %v", wanted, got)
-		}
+		assertCorrectMessage(t, got, want)
 	})
 	//Wallet Credit Test
 	t.Run("Wallet credit test", func(t *testing.T) {
@@ -26,12 +30,9 @@ func TestWallet(t *testing.T) {
 		dummy_wallet.Credit(decimal.NewFromFloat(5.0))
 
 		got := dummy_wallet.Balance()
-		wanted := decimal.NewFromFloat(10.0)
+		want := decimal.NewFromFloat(10.0)
 
-		if got.Equal(wanted) == false {
-			t.Errorf("expected %v, got %v", wanted, got)
-		}
-
+		assertCorrectMessage(t, got, want)
 	})
 	//Negative Credit Test
 	t.Run("Wallet negative credit test", func(t *testing.T) {
