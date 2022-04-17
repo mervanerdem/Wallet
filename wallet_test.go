@@ -9,7 +9,7 @@ import (
 func TestWallet(t *testing.T) {
 	assertCorrectMessage := func(t testing.TB, got, want decimal.Decimal) {
 		t.Helper()
-		if got != want {
+		if got.Equal(want) == false {
 			t.Errorf("got %q want %q", got, want)
 		}
 	}
@@ -19,13 +19,13 @@ func TestWallet(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15))
 
 		got := dummy_wallet.Balance()
-		want := decimal.NewFromFloat(15.0)
+		want := decimal.NewFromFloat(15)
 
 		assertCorrectMessage(t, got, want)
 	})
 	//Wallet Credit Test
 	t.Run("Wallet credit test", func(t *testing.T) {
-		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15))
+		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15.0))
 
 		dummy_wallet.Credit(decimal.NewFromFloat(5.0))
 
