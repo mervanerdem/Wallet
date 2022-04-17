@@ -22,8 +22,9 @@ func (w *Wallet) Balance() decimal.Decimal {
 }
 
 func (w *Wallet) Debit(amount decimal.Decimal) error {
-	if amount.IsNegative() == true {
-		return fmt.Errorf("Debit amount can not be negative!")
+	if amount.IsNegative() {
+		x := fmt.Errorf("debit amount can not be negative")
+		return x
 	}
 	w.Wallet_balance = decimal.Sum(w.Wallet_balance, amount)
 	return nil
@@ -31,10 +32,10 @@ func (w *Wallet) Debit(amount decimal.Decimal) error {
 
 func (w *Wallet) Credit(amount decimal.Decimal) error {
 
-	if amount.GreaterThan(w.Wallet_balance) == true {
-		return fmt.Errorf("Credit amount can not be higher than balance!")
-	} else if amount.IsNegative() == true {
-		return fmt.Errorf("Credit amount can not be negative!")
+	if amount.GreaterThan(w.Wallet_balance) {
+		return fmt.Errorf("credit amount can not be higher than balance")
+	} else if amount.IsNegative() {
+		return fmt.Errorf("credit amount can not be negative")
 	}
 	amount = amount.Neg()
 	w.Wallet_balance = decimal.Sum(w.Wallet_balance, amount)
