@@ -34,10 +34,10 @@ func NewMStorage(dsn string) (*MStorage, *gorm.DB, error) {
 
 type MStorage struct {
 	client *gorm.DB
-	logger *log.Logger
+	//logger *log.Logger
 }
 
-var a WStorage = &MStorage{}
+// var a WStorage = &MStorage{}
 
 func (m *MStorage) Update(wallet Wallet) error {
 	err := m.client.Save(wallet).Error

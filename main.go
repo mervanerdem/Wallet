@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	storage, _, err := NewMStorage("'root':Mervan.1907@tcp(127.0.0.1:3306)/wallet_db?charset=utf8mb4&parseTime=True&loc=Local")
+	storage, _, err := NewMStorage(Path)
 	if err != nil {
 		panic("Configration is wrong")
 	}
