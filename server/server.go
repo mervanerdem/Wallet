@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -6,13 +6,14 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"wallet/Model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 	"github.com/sirupsen/logrus"
 )
 
-func NewServer(storage WStorage) http.Handler {
+func NewServer(storage Model.WStorage) http.Handler {
 	router := gin.New()
 	router.Use(getInfoLogger(getLogger("./log.log")))
 	//Get balance
@@ -74,7 +75,7 @@ func NewServer(storage WStorage) http.Handler {
 			"Debit":     data.Amount,
 			"Wallet_ID": wallet.ID,
 		})
-		storage.Update(Wallet{
+		storage.Update(Model.Wallet{
 			ID:             wallet.ID,
 			Wallet_balance: wallet.Wallet_balance,
 		})
@@ -115,7 +116,7 @@ func NewServer(storage WStorage) http.Handler {
 			"Debit":     data.Amount,
 			"Wallet_ID": wallet.ID,
 		})
-		storage.Update(Wallet{
+		storage.Update(Model.Wallet{
 			ID:             wallet.ID,
 			Wallet_balance: wallet.Wallet_balance,
 		})

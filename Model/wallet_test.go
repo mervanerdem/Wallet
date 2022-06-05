@@ -1,4 +1,4 @@
-package main
+package Model
 
 import (
 	"testing"
@@ -14,8 +14,8 @@ func TestWallet(t *testing.T) {
 		}
 	}
 
-	//Wallet Balance Test
-	t.Run("Wallet balance test", func(t *testing.T) {
+	//Model Balance Test
+	t.Run("Model balance test", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15))
 
 		got := dummy_wallet.Balance()
@@ -23,8 +23,8 @@ func TestWallet(t *testing.T) {
 
 		assertCorrectMessage(t, got, want)
 	})
-	//Wallet Credit Test
-	t.Run("Wallet credit test", func(t *testing.T) {
+	//Model Credit Test
+	t.Run("Model credit test", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15.0))
 
 		dummy_wallet.Credit(decimal.NewFromFloat(5.0))
@@ -35,7 +35,7 @@ func TestWallet(t *testing.T) {
 		assertCorrectMessage(t, got, want)
 	})
 	//Negative Credit Test
-	t.Run("Wallet negative credit test", func(t *testing.T) {
+	t.Run("Model negative credit test", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15))
 
 		got := dummy_wallet.Credit(decimal.NewFromFloat(-5))
@@ -45,8 +45,8 @@ func TestWallet(t *testing.T) {
 		}
 
 	})
-	//Wallet Debit Test
-	t.Run("Wallet debit test", func(t *testing.T) {
+	//Model Debit Test
+	t.Run("Model debit test", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(15))
 
 		dummy_wallet.Debit(decimal.NewFromFloat(5))
@@ -58,7 +58,7 @@ func TestWallet(t *testing.T) {
 			t.Errorf("expected %v, got %v", wanted, got)
 		}
 	})
-	//Wallet credit can not higher than balance Test
+	//Model credit can not higher than balance Test
 	t.Run("Credit can not higher than balance", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(5))
 
@@ -68,7 +68,7 @@ func TestWallet(t *testing.T) {
 			t.Errorf("expected error got nil")
 		}
 	})
-	//Wallet Credit can not be negative Test
+	//Model Credit can not be negative Test
 	t.Run("Credit can not higher than balance", func(t *testing.T) {
 		dummy_wallet := getEmptyWallet(1, decimal.NewFromFloat(5))
 

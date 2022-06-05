@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/json"
@@ -7,16 +7,17 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"wallet/Model"
 
 	"github.com/shopspring/decimal"
 )
 
 type TStorage struct {
-	dataholder map[int]Wallet
+	dataholder map[int]Model.Wallet
 }
 
-func (t *TStorage) Update(wallet Wallet) error { return nil }
-func (t *TStorage) Get(id int) (*Wallet, error) {
+func (t *TStorage) Update(wallet Model.Wallet) error { return nil }
+func (t *TStorage) Get(id int) (*Model.Wallet, error) {
 	if res, ok := t.dataholder[id]; ok {
 		return &res, nil
 	}
@@ -26,7 +27,7 @@ func (t *TStorage) Get(id int) (*Wallet, error) {
 
 func TestServer(t *testing.T) {
 	server := NewServer(&TStorage{ // get out it
-		dataholder: map[int]Wallet{
+		dataholder: map[int]Model.Wallet{
 			1: {ID: 1, Wallet_balance: decimal.NewFromFloat(10)},
 			2: {ID: 2, Wallet_balance: decimal.NewFromFloat(20)},
 			3: {ID: 3, Wallet_balance: decimal.NewFromFloat(30)},
