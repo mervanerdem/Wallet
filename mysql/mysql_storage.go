@@ -1,9 +1,11 @@
-package main
+package mysql
 
 import (
 	"fmt"
 	"log"
 	"os"
+	"wallet/Model"
+
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -39,18 +41,18 @@ type MStorage struct {
 
 // var a WStorage = &MStorage{}
 
-func (m *MStorage) Update(wallet Wallet) error {
+func (m *MStorage) Update(wallet Model.Wallet) error {
 	err := m.client.Save(wallet).Error
 	return err
 }
 
-func (m *MStorage) Get(id int) (*Wallet, error) {
-	var wallet Wallet
+func (m *MStorage) Get(id int) (*Model.Wallet, error) {
+	var wallet Model.Wallet
 	err := m.client.First(&wallet, "id = ?", fmt.Sprint(id)).Error
 	return &wallet, err
 }
 
-func (m *MStorage) New(wallet Wallet) error {
+func (m *MStorage) New(wallet Model.Wallet) error {
 	err := m.client.Create(&wallet).Error
 	return err
 }
