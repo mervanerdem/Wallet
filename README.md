@@ -83,7 +83,7 @@ Used Library
 
 [HTTP](https://github.com/gin-gonic/gin) : Gin is a web framework written in Go (Golang)
 
-[MySQL](https://github.com/go-gorm/gorm) : The fantastic ORM library for Golang, aims to be developer friendly.
+[GORM](https://github.com/go-gorm/gorm) : The fantastic ORM library for Golang, aims to be developer friendly.
 
 [Decimal](https://github.com/shopspring/decimal) :Arbitrary-precision fixed-point decimal numbers in go.
 
